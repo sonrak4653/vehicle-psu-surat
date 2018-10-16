@@ -1,3 +1,3 @@
 <?php
-echo "Hello LINE BOT by MR.K";
+echo "Hello LINE BOT by MR.KOOK";
 ?>
