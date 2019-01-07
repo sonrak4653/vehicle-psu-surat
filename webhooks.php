@@ -84,4 +84,5 @@ if (!is_null($events['events'])) {
 		
 	}
 }
+print_r($events['events']);
 echo "Webhooks is OK";
