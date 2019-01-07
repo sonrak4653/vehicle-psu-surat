@@ -19,15 +19,21 @@ if (!is_null($events['events'])) {
 		// Reply only when message sent is in 'text' format
 		if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
 			// Get text sent
-			$intro_text = "หมายเลขยืนยันการลงทะเบียนของคุณ คือ ";
-			$text = $event['source']['userId'];
+			
+			$intro_text = "หมายเลขยืนยันการลงทะเบียนของคุณ คือ ";			
+			$Line_UserId = $event['source']['userId'];
+			$apikey = mt_rand(100000, 999999);			
+			$register_text = " กดที่ลิงค์นี้เพื่อลงเบียนผู้ใช้งาน http://ellis.surat.psu.ac.th/Line-Messaging-API/staff_register.php?line_user_id=".$Line_UserId."&apikey=".$apikey;
+			
 			// Get replyToken
 			$replyToken = $event['replyToken'];
+			// Get UserId
+			$line_userId = $event['source']['userId'];
 
 			// Build message to reply back
 			$messages = [
 				'type' => 'text',
-				'text' => $intro_text.$text
+				'text' => $intro_text.$apikey.$register_text
 			];
 
 			// Make a POST Request to Messaging API to reply to sender
@@ -48,8 +54,32 @@ if (!is_null($events['events'])) {
 			$result = curl_exec($ch);
 			curl_close($ch);						
 
-			echo $result . "\r\n";
+			echo $result . "\r\n";			
+	
 		}
+		
+	
+	
+	
+	
+
+	// Make a POST Request to Messaging API to reply to sender
+	//$url = 'http://ellis.surat.psu.ac.th/Line-Messaging-API/register.php';	
+	$url = 'http://ellis.surat.psu.ac.th/Line-Messaging-API/staff_register.php';	
+
+	$headers = ['Content-Type' => 'application/x-www-form-urlencoded', 'charset' => 'utf-8'];
+
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, "apikey=$apikey&line_user_id=$line_userId&intro_text=$intro_text");
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);	
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+	$result = curl_exec($ch);
+	curl_close($ch);
+	
+		
+		
 	}
 }
 echo "OK";
